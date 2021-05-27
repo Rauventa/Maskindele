@@ -21,11 +21,43 @@ export const SignIn = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('/api/auth/registration', {
-        email: 'rauventa@gmail.com',
-        password: '1234567',
-        repeat: '1234567'
+
+      // const response = await axios.post('/api/user/registration', {
+      //   name: 'Alex',
+      //   surname: 'Alecto',
+      //   phone: '88005553535',
+      //   email: 'rauventa@gmail.com',
+      //   password: '1234567',
+      //   repeat: '1234567',
+      //   role: 'seller'
+      // })
+
+      // const response = await axios.post('/api/car/create', {
+      //   brand: 'BMW',
+      //   model: 'X6',
+      //   win: '98274398723948',
+      //   year: '2018',
+      //   description: 'Pizdataya ta4ka'
+      // })
+
+      // const response = await axios.post('/api/parts/create', {
+      //   name: 'salo',
+      //   vendor: '1',
+      //   carId: '60b0054bf00d1f5b80a9acab'
+      // })
+      // //
+      // const response = await axios.post('/api/order/create', {
+      //   status: 0,
+      //   userId: '60b017316dc0947181e9dc1c',
+      //   parts: ['60b006ad9444605dc4c3028c', '60b017715853c8569dfb1a55']
+      // })
+
+      const response = await axios.post('/api/user/orders', {
+        userId: '60b017316dc0947181e9dc1c'
       })
+
+
+      // const response = await axios.get('/api/car/60b0054bf00d1f5b80a9acab')
 
       console.log(response)
     } catch (e) {
