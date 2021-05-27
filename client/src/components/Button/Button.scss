@@ -1,0 +1,42 @@
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  transition: ease-in-out .3s;
+  margin: 0.5rem 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &-primary {
+    background-color: #436187;
+    border: 1px solid #436187;
+    color: #fff;
+    
+    &:hover {
+      background-color: #398BD7;
+      border: 1px solid #398BD7;
+    }
+  }
+
+  &-secondary {
+    background-color: transparent;
+    border: 1px solid #000;
+    color: #000;
+  }
+
+  &-light {
+    background-color: transparent;
+    border: 1px solid #436187;
+    color: #436187;
+  }
+
+  &-disabled {
+    background-color: transparent;
+    border: 1px solid #DFDFDF;
+    color: #DFDFDF;
+  }
+}
