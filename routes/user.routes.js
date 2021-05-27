@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const {check, validationResult} = require('express-validator');
 const User = require('../models/User');
+const Order = require('../models/Order');
 const router = Router();
 
 router.post(
@@ -23,7 +24,7 @@ router.post(
         })
       }
 
-      const {email, password, repeat} = req.body;
+      const {name, surname, phone, email, password, repeat, role} = req.body;
 
       const candidate = await User.findOne({email});
       if (candidate) {
@@ -32,7 +33,7 @@ router.post(
 
       if (password === repeat) {
         const hashedPassword = await bcrypt.hash(password, 12);
-        const user = new User({email, password: hashedPassword});
+        const user = new User({name, surname, phone, email, password: hashedPassword, role});
 
         await user.save();
 
@@ -88,5 +89,20 @@ router.post(
     }
   }
 );
+
+router.post('/orders', async (req, res) => {
+  try {
+    const {userId} = req.body;
+
+    const user = await User.findById({_id: userId}).populate({
+      path: 'orders',
+      populate: { path : "parts"}
+    })
+
+    res.status(200).json(user.orders)
+  } catch(e) {
+    res.status(500).json({message: 'Something went wrong'})
+  }
+})
 
 module.exports = router;
