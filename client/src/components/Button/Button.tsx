@@ -7,6 +7,8 @@ interface ButtonProps {
   light?: boolean,
   disabled?: boolean,
 
+  onClick: () => void,
+
   children: React.ReactNode
 }
 
@@ -16,8 +18,14 @@ export const Button = ({
   light,
   disabled,
 
+  onClick,
+
   children
 }: ButtonProps) => {
+
+  const returnClickHandler = () => {
+    onClick()
+  }
 
   let className = 'btn'
 
@@ -41,6 +49,7 @@ export const Button = ({
     <button
       className={className}
       disabled={disabled}
+      onClick={returnClickHandler}
     >
       {children}
     </button>

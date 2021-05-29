@@ -22,11 +22,15 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
+//TODO - reserve query
+
 router.post(
     '/create',
     [
         check('name', 'Bad part name').exists(),
         check('vendor', 'Bad vendor code').exists(),
+        check('price', 'Bad part price').exists(),
+        check('owner', 'Bad owner id').exists(),
         check('carId', 'Bad car id').exists(),
     ],
     async (req, res) => {
@@ -39,19 +43,10 @@ router.post(
                 })
             }
 
-            const {name, vendor, carId} = req.body;
+            const {name, vendor, price, owner, carId} = req.body;
 
-            const candidate = await Parts.findOne({vendor});
-            if (candidate) {
-                return res.status(400).json({message: 'This part is already used'})
-            }
-
-            const part = new Parts({name, vendor, car: carId})
+            const part = new Parts({name, vendor, status: 0, price, car: carId, owner})
             await part.save();
-
-            const car = await Car.findById({_id: carId});
-            car.parts.push(part)
-            await car.save()
 
             return res.status(201).json({message: 'part was created'})
 

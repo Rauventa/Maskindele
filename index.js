@@ -9,7 +9,7 @@ app.use(express.json({extended: true}));
 app.use('/api/user', require('./routes/user.routes'));
 app.use('/api/car', require('./routes/car.routes'));
 app.use('/api/parts', require('./routes/parts.routes'));
-app.use('/api/order', require('./routes/order.routes'));
+// app.use('/api/order', require('./routes/order.routes'));
 
 const PORT = config.get('port') || 5000;
 

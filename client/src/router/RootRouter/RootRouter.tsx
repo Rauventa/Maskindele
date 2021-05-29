@@ -1,13 +1,34 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { SignIn } from '../../pages/SignIn/SignIn';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import {Page404} from "../../pages/404/Page404";
+import {Dashboard} from "../../pages/Dashboard/Dashboard";
+import {AuthRouter} from "../AuthRouter/AuthRouter";
 
-export const RootRouter = () => {
+interface RootRouterProps {
+
+}
+
+export const RootRouter = ({
+}: RootRouterProps) => {
+
+  const isAuth = !!localStorage.getItem('userId');
+
   return (
     <Switch>
-      <Route path={'/'} exact>
-        <SignIn />
-      </Route>
+      {isAuth ?
+        <>
+          <Route path={'/'} exact>
+            <Dashboard />
+          </Route>
+          <Route path={'*'}>
+            <Page404 />
+          </Route>
+        </> :
+        <>
+          <AuthRouter />
+          <Redirect to={'/auth'} />
+        </>
+      }
     </Switch>
   )
 }

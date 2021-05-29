@@ -5,61 +5,60 @@ import { $t } from '../../lib/i18n';
 import './SignIn.scss'
 import {MainHeading} from "../../components/MainHeading/MainHeading";
 import axios from 'axios'
+import {useHistory} from "react-router-dom";
 
-export const SignIn = () => {
+interface FormSignInProps {
+  email: string,
+  password: string,
+}
 
-  const [loginValue, setLoginValue] = useState<string>('')
-  const [passwordValue, setPasswordValue] = useState<string>('')
+interface SignInProps {
+  changeAuthType: (value: string) => void;
+}
 
-  const onChangeLoginHandler = (value: string) => {
-    setLoginValue(value)
+export const SignIn = ({
+  changeAuthType
+}: SignInProps) => {
+
+  const history = useHistory()
+
+  const defaultFormState = {
+    email: '',
+    password: '',
   }
 
-  const onChangePasswordHandler = (value: string) => {
-    setPasswordValue(value)
+  const [formState, setFormState] = useState<FormSignInProps>(defaultFormState);
+
+  const updateFormHandler = (value: string, iterator: string) => {
+    switch (iterator) {
+      case 'email':
+        setFormState(prev => {
+          return {
+            ...prev,
+            email: value
+          }
+        })
+        break;
+      case 'password':
+        setFormState(prev => {
+          return {
+            ...prev,
+            password: value
+          }
+        })
+        break;
+    }
   }
 
-  const handleSubmit = async () => {
+  const sendDataHandler = async () => {
     try {
+      const response = await axios.post(`/api/user/login`, formState);
 
-      // const response = await axios.post('/api/user/registration', {
-      //   name: 'Alex',
-      //   surname: 'Alecto',
-      //   phone: '88005553535',
-      //   email: 'rauventa@gmail.com',
-      //   password: '1234567',
-      //   repeat: '1234567',
-      //   role: 'seller'
-      // })
+      localStorage.setItem('userName', response.data.name + " " + response.data.surname);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.userId);
 
-      // const response = await axios.post('/api/car/create', {
-      //   brand: 'BMW',
-      //   model: 'X6',
-      //   win: '98274398723948',
-      //   year: '2018',
-      //   description: 'Pizdataya ta4ka'
-      // })
-
-      // const response = await axios.post('/api/parts/create', {
-      //   name: 'salo',
-      //   vendor: '1',
-      //   carId: '60b0054bf00d1f5b80a9acab'
-      // })
-      // //
-      // const response = await axios.post('/api/order/create', {
-      //   status: 0,
-      //   userId: '60b017316dc0947181e9dc1c',
-      //   parts: ['60b006ad9444605dc4c3028c', '60b017715853c8569dfb1a55']
-      // })
-
-      const response = await axios.post('/api/user/orders', {
-        userId: '60b017316dc0947181e9dc1c'
-      })
-
-
-      // const response = await axios.get('/api/car/60b0054bf00d1f5b80a9acab')
-
-      console.log(response)
+      history.push('/')
     } catch (e) {
       console.log(e)
     }
@@ -75,24 +74,22 @@ export const SignIn = () => {
       <Input
         type={'email'}
         placeholder={$t('E-mail')}
-        value={loginValue}
-        onChange={onChangeLoginHandler}
+        value={formState.email}
+        onChange={(value) => updateFormHandler(value, 'email')}
       />
-
-      <button onClick={handleSubmit}>
-        <p>Hello</p>
-      </button>
 
       <Input
         type={'password'}
         placeholder={$t('Пароль')}
-        value={passwordValue}
-        onChange={onChangePasswordHandler}
+        value={formState.password}
+        onChange={(value) => updateFormHandler(value, 'password')}
       />
 
-      <Button primary>
-        {$t('Зарегистрироваться')}
+      <Button primary onClick={sendDataHandler}>
+        {$t('Войти')}
       </Button>
+
+      <p onClick={() => changeAuthType('registration')}>Еще нет аккаунта? Зарегестрироваться</p>
     </div>
   )
 }
