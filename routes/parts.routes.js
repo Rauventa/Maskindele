@@ -15,7 +15,7 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         await Parts.findByIdAndDelete({_id: req.params.id})
-        res.status(200).json({message: 'Part was deleted successfully'})
+        res.status(200).json({message: 'Запчасть была успешно удалена'})
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
@@ -26,11 +26,11 @@ router.delete('/:id', async (req, res) => {
 router.post(
     '/create',
     [
-        check('name', 'Bad part name').exists(),
-        check('vendor', 'Bad vendor code').exists(),
-        check('price', 'Bad part price').exists(),
-        check('owner', 'Bad owner id').exists(),
-        check('car', 'Bad car id').exists(),
+        check('name', 'Некорректное имя детали').exists(),
+        check('vendor', 'Некорректный код вендора').exists(),
+        check('price', 'Некорректная цена детали').exists(),
+        check('owner', 'Некорректный айди владельца').exists(),
+        check('car', 'Некорректный айди машины').exists(),
     ],
     async (req, res) => {
         try {
@@ -38,7 +38,7 @@ router.post(
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: 'Wrong data'
+                    message: 'Некорректный данные'
                 })
             }
 
@@ -47,7 +47,7 @@ router.post(
             const part = new Parts({name, vendor, status: 0, price, car, owner})
             await part.save();
 
-            return res.status(201).json({message: 'part was created'})
+            return res.status(201).json({message: 'Запчать усаешно создана'})
 
         } catch (e) {
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
