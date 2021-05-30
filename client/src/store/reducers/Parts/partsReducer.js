@@ -1,12 +1,13 @@
-import {GET_ALL_PARTS_SUCCESS} from "../../actionTypes";
+import {GET_USER_PARTS_SUCCESS} from "../../actionTypes";
 
 const initialState = {
-    parts: []
+    parts: [],
+    allParts: []
 };
 
 export default function partsReducer(state = initialState, action) {
     switch (action.type) {
-        case GET_ALL_PARTS_SUCCESS:
+        case GET_USER_PARTS_SUCCESS:
             return {
                 ...state,
                 parts: action.parts

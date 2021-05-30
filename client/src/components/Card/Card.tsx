@@ -3,15 +3,17 @@ import './Card.scss'
 
 interface CardProps {
   children: JSX.Element,
-  title?: string
+  title?: string,
+  className?: string,
 }
 
 export const Card = ({
   children,
-  title
+  title,
+  className
 }: CardProps) => {
   return (
-    <div className="card">
+    <div className={`card ${className}`}>
       {title ?
         <div className="card__title">
           {title}
