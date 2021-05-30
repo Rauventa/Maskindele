@@ -1,21 +1,21 @@
 import axios from 'axios';
-import {GET_ALL_PARTS_SUCCESS} from "../../actionTypes";
+import {GET_USER_PARTS_SUCCESS} from "../../actionTypes";
 
-export function getAllParts(userId) {
+export function getUserParts(userId) {
     return async dispatch => {
 
         try {
             const response = await axios.post('/api/user/parts', {userId});
-            dispatch(getAllPartsSuccess(response.data))
+            dispatch(getUserPartsSuccess(response.data))
         } catch (e) {
             console.log(e)
         }
     }
 }
 
-export function getAllPartsSuccess(parts) {
+export function getUserPartsSuccess(parts) {
     return {
-        type: GET_ALL_PARTS_SUCCESS,
+        type: GET_USER_PARTS_SUCCESS,
         parts
     }
 }

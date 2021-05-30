@@ -21,7 +21,19 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
-//TODO - reserve query
+router.put(
+    '/reserve',
+    async (req, res) => {
+        try {
+            const {customerId, partId} = req.body;
+
+            await Parts.findOneAndUpdate({_id: partId}, {status: 1, customer: customerId});
+            res.status(201).json({message: 'Деталь забронирована'});
+        } catch (e) {
+            res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        }
+    }
+)
 
 router.post(
     '/create',
