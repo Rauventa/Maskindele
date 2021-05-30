@@ -12,11 +12,9 @@ import {SoldCabinetCars} from "./components/SoldCabinetCars";
 
 export const Cabinet = () => {
 
-  const {name, role} = useContext(AuthContext);
-
   const dispatch = useDispatch();
 
-  const {userId} = useContext(AuthContext)
+  const {userId, name, role} = useContext(AuthContext)
 
   useEffect(() => {
     dispatch(getUserParts(userId))
@@ -32,7 +30,7 @@ export const Cabinet = () => {
         </div>
 
         <Button href={'/sold'} primary>
-          {$t('Продать деталь')}
+          {$t('Выставить деталь на продажу')}
         </Button>
       </div>
 

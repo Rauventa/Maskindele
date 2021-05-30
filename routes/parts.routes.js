@@ -35,6 +35,18 @@ router.put(
     }
 )
 
+router.put(
+    '/sold/:id',
+    async (req, res) => {
+        try {
+            await Parts.findOneAndUpdate({_id: req.params.id}, {status: 2});
+            res.status(201).json({message: 'Деталь продана'});
+        } catch (e) {
+            res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        }
+    }
+)
+
 router.post(
     '/create',
     [

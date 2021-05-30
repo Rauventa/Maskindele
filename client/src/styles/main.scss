@@ -29,3 +29,13 @@
   margin-bottom: 20px;
   color: #4d4d4d;
 }
+
+a {
+  text-decoration: none;
+  color: #398BD7;
+  transition: all .3s;
+
+  &:hover {
+    color: #106ca1;
+  }
+}

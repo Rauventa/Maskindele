@@ -41,9 +41,6 @@ export const Dashboard = () => {
   }
 
   const handleReserveDetail = async (id: string) => {
-
-    console.log(id)
-
     try {
       const response = await axios.put('/api/parts/reserve', {
         customerId: userId,
@@ -71,17 +68,19 @@ export const Dashboard = () => {
           />
 
           {parts?.map((item: IParts, index: number) => {
-            return (
-              <div key={index}>
-                <div>
-                  {$t(`${item.name} за ${item.price}`)}
-                </div>
+            if (item.status === 0) {
+              return (
+                <div key={index}>
+                  <div>
+                    {$t(`${item.name} за ${item.price}`)}
+                  </div>
 
-                <Button primary onClick={() => handleReserveDetail(item._id)}>
-                  {$t('Забронировать деталь')}
-                </Button>
-              </div>
-            )
+                  <Button primary onClick={() => handleReserveDetail(item._id)}>
+                    {$t('Забронировать деталь')}
+                  </Button>
+                </div>
+              )
+            }
           })}
         </div>
       </Card>
