@@ -1,16 +1,15 @@
 import React from 'react';
+import { $t } from '../../lib/i18n';
 import './Dashboard.scss'
-import {Header} from "../../components/Header/Header";
-import { Footer } from '../../components/Footer/Footer';
 
 export const Dashboard = () => {
   return (
     <div className={'Dashboard'}>
 
-      <Header />
-      <h1>Hello Dashboard</h1>
+      <div className="page-title">
+        {$t('Дашборд')}
+      </div>
 
-      <Footer />
     </div>
   )
 }

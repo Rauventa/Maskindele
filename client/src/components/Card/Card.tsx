@@ -2,15 +2,23 @@ import React from 'react';
 import './Card.scss'
 
 interface CardProps {
-  children: React.ReactNode
+  children: JSX.Element,
+  title: string
 }
 
 export const Card = ({
-  children
+  children,
+  title
 }: CardProps) => {
   return (
     <div className="card">
-      {children}
+      <div className="card__title">
+        {title}
+      </div>
+
+      <div className="card__content">
+        {children}
+      </div>
     </div>
   )
 }

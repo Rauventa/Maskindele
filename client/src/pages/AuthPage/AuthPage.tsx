@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {Header} from "../../components/Header/Header";
-import {Footer} from "../../components/Footer/Footer";
 import {SignIn} from "../SignIn/SignIn";
 import {SignUp} from "../SignUp/SignUp";
 import './AuthPage.scss'
@@ -15,8 +13,6 @@ export const AuthPage = () => {
 
   return (
     <div className={'AuthPage'}>
-      <Header />
-
       <div className={'AuthPage__content'}>
         {page === 'login' ?
           <SignIn
@@ -27,8 +23,6 @@ export const AuthPage = () => {
           />
         }
       </div>
-
-      <Footer />
     </div>
   )
 }

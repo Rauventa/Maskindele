@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { Button } from '../../components/Button/Button';
 import { Input } from '../../components/Input/Input'
 import { $t } from '../../lib/i18n';
@@ -6,6 +6,7 @@ import './SignIn.scss'
 import {MainHeading} from "../../components/MainHeading/MainHeading";
 import axios from 'axios'
 import {useHistory} from "react-router-dom";
+import {AuthContext} from "../../context/AuthContext";
 
 interface FormSignInProps {
   email: string,
@@ -22,12 +23,15 @@ export const SignIn = ({
 
   const history = useHistory()
 
+  const {login} = useContext(AuthContext)
+
   const defaultFormState = {
     email: '',
     password: '',
   }
 
   const [formState, setFormState] = useState<FormSignInProps>(defaultFormState);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const updateFormHandler = (value: string, iterator: string) => {
     switch (iterator) {
@@ -54,13 +58,14 @@ export const SignIn = ({
     try {
       const response = await axios.post(`/api/user/login`, formState);
 
-      localStorage.setItem('userName', response.data.name + " " + response.data.surname);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.userId);
+      const name = `${response.data.name} ${response.data.surname}`
+      login(response.data.token, response.data.userId, name, response.data.role)
+
+      setErrorMessage('')
 
       history.push('/')
     } catch (e) {
-      console.log(e)
+      setErrorMessage(e.response.data.message)
     }
   }
 
@@ -89,7 +94,20 @@ export const SignIn = ({
         {$t('Войти')}
       </Button>
 
-      <p onClick={() => changeAuthType('registration')}>Еще нет аккаунта? Зарегестрироваться</p>
+      <div className={'SignIn__additional'}>
+        <div className="secondary-text">
+          {$t('Еще нет аккаунта?')}
+        </div>
+        <div className="link-text" onClick={() => changeAuthType('registration')}>
+          {$t('Зарегестрироваться')}
+        </div>
+      </div>
+
+      {errorMessage !== '' ?
+        <div className={'SignIn__errors'}>
+          {errorMessage}
+        </div> : null
+      }
     </div>
   )
 }

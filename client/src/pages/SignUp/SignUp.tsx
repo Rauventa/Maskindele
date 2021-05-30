@@ -5,7 +5,7 @@ import {MainHeading} from "../../components/MainHeading/MainHeading";
 import {Input} from "../../components/Input/Input";
 import {Button} from "../../components/Button/Button";
 import axios from 'axios'
-import { useHistory } from 'react-router-dom';
+import {Checkbox} from "../../components/Checkbox/Checkbox";
 
 interface FormSignUpProps {
   name: string,
@@ -14,7 +14,7 @@ interface FormSignUpProps {
   email: string,
   password: string,
   repeat: string,
-  role: string
+  role: boolean
 }
 
 interface SignUpProps {
@@ -25,8 +25,6 @@ export const SignUp = ({
   changeAuthType
 }: SignUpProps) => {
 
-  const history = useHistory()
-
   const defaultFormState = {
     name: '',
     surname: '',
@@ -34,10 +32,11 @@ export const SignUp = ({
     email: '',
     password: '',
     repeat: '',
-    role: 'seller'
+    role: false
   }
 
   const [formState, setFormState] = useState<FormSignUpProps>(defaultFormState);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const updateFormHandler = (value: string, iterator: string) => {
     switch (iterator) {
@@ -90,7 +89,7 @@ export const SignUp = ({
         })
         break;
       case 'role':
-        setFormState(prev => {
+        setFormState((prev: any) => {
           return {
             ...prev,
             role: value
@@ -104,13 +103,13 @@ export const SignUp = ({
     try {
       await axios.post('/api/user/registration', formState);
 
-      history.push('/signin')
+      changeAuthType('login')
+
+      setErrorMessage('')
     } catch (e) {
-      console.log(e)
+      setErrorMessage(e.response.data.message)
     }
   }
-
-  console.log(formState)
 
   return (
     <div className={'SignUp'}>
@@ -161,11 +160,28 @@ export const SignUp = ({
         onChange={(value) => updateFormHandler(value, 'repeat')}
       />
 
+      <Checkbox checked={formState.role} onChange={(value: any) => updateFormHandler(value, 'role')}>
+        {$t('Я продавец')}
+      </Checkbox>
+
       <Button primary onClick={sendDataHandler}>
         {$t('Зарегистрироваться')}
       </Button>
 
-      <p onClick={() => changeAuthType('login')}>Уже есть аккаунт? Войти</p>
+      <div className={'SignUp__additional'}>
+        <div className="secondary-text">
+          {$t('Уже есть аккаунт?')}
+        </div>
+        <div className="link-text" onClick={() => changeAuthType('login')}>
+          {$t('Войти')}
+        </div>
+      </div>
+
+      {errorMessage !== '' ?
+        <div className={'SignUp__errors'}>
+          {errorMessage}
+        </div> : null
+      }
     </div>
   )
 }

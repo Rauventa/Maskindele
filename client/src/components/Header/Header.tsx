@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {NavLink, useHistory} from 'react-router-dom';
 import './Header.scss'
 import {$t} from "../../lib/i18n";
+import {AuthContext} from "../../context/AuthContext";
+
 interface HeaderProps {
 
 }
@@ -10,15 +12,12 @@ export const Header = ({
 
 }: HeaderProps) => {
 
-  const isAuth = !!localStorage.getItem('userId');
+  const {logout, isAuth} = useContext(AuthContext)
 
   const history = useHistory();
 
   const logoutHandler = () => {
-    localStorage.removeItem('userName');
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-
+    logout()
     history.push('/auth')
   }
 
@@ -30,8 +29,11 @@ export const Header = ({
         </NavLink>
       </div>
       {isAuth ?
-        <div className="header__navigation" onClick={logoutHandler}>
-          <div className={'header-link'}>
+        <div className="header__navigation">
+          <NavLink to={'/cabinet'} className={'header-link'}>
+            {$t('Кабинет')}
+          </NavLink>
+          <div className={'header-link'} onClick={logoutHandler}>
             {$t('Выйти')}
           </div>
         </div> :
