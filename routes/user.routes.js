@@ -4,9 +4,8 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const {check, validationResult} = require('express-validator');
 const User = require('../models/User');
+const Parts = require('../models/Parts');
 const router = Router();
-
-//TODO - check dor role status in reg/log
 
 router.post(
   '/registration',
@@ -83,7 +82,7 @@ router.post(
         {expiresIn: '1h'}
       );
 
-      res.status(200).json({token, userId: user.id, name: user.name, surname: user.surname});
+      res.status(200).json({token, userId: user.id, name: user.name, surname: user.surname, role: user.role});
 
     } catch (e) {
       res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
@@ -91,19 +90,18 @@ router.post(
   }
 );
 
-// router.post('/orders', async (req, res) => {
-//   try {
-//     const {userId} = req.body;
-//
-//     const user = await User.findById({_id: userId}).populate({
-//       path: 'orders',
-//       populate: { path : "parts"}
-//     })
-//
-//     res.status(200).json(user.orders)
-//   } catch(e) {
-//     res.status(500).json({message: 'Something went wrong'})
-//   }
-// })
+router.post(
+    '/parts',
+    async (req, res) => {
+      try {
+        const {userId} = req.body;
+
+        const parts = await Parts.find({'owner': userId}).populate('car');
+        res.status(200).json(parts)
+      } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+      }
+    }
+)
 
 module.exports = router;

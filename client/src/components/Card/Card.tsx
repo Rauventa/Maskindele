@@ -3,7 +3,7 @@ import './Card.scss'
 
 interface CardProps {
   children: JSX.Element,
-  title: string
+  title?: string
 }
 
 export const Card = ({
@@ -12,9 +12,11 @@ export const Card = ({
 }: CardProps) => {
   return (
     <div className="card">
-      <div className="card__title">
-        {title}
-      </div>
+      {title ?
+        <div className="card__title">
+          {title}
+        </div> : null
+      }
 
       <div className="card__content">
         {children}

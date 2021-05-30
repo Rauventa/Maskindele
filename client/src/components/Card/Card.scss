@@ -1,6 +1,14 @@
 .card {
-  padding: 20px 30px;
   background: #FFFFFF;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   border-radius: 5px;
+
+  &__title {
+    border-bottom: 1px solid #e1e1e1;
+    padding: 15px 20px;
+  }
+
+  &__content {
+    padding: 20px;
+  }
 }

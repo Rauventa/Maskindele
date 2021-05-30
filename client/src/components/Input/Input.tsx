@@ -4,7 +4,7 @@ import './Input.scss'
 interface InputProps {
   placeholder: string,
   type: string,
-  value: string,
+  value: string | number,
   disabled?: boolean,
   onChange: (e: string) => void
 }

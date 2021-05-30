@@ -1,0 +1,24 @@
+.Cabinet {
+
+  .page-title {
+    margin: 0;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .card {
+      width: calc(50% - 10px);
+      margin-bottom: 20px;
+    }
+  }
+}
