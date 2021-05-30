@@ -33,6 +33,16 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
+router.post('/parts', async (req, res) => {
+    try {
+        const {carId} = req.body
+        const parts = await Parts.find({ 'car': carId }).populate( 'owner' )
+        res.status(200).json(parts)
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так'})
+    }
+})
+
 
 router.post(
     '/create',
