@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
         const cars = await Car.find({}).populate('parts');
         res.status(200).json(cars)
     } catch(e) {
-        res.status(500).json({message: 'Something went wrong'})
+        res.status(500).json({message: 'Что-то пошло не так'})
     }
 })
 
@@ -17,10 +17,9 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const car = await Car.find({_id: req.params.id}).populate('parts');
-
         res.status(200).json(car)
     } catch(e) {
-        res.status(500).json({message: 'Something went wrong'})
+        res.status(500).json({message: 'Что-то пошло не так'})
     }
 })
 
@@ -28,9 +27,9 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         await Car.findOneAndDelete({_id: req.params.id})
-        res.status(200).json({message: 'Car was deleted successfully'})
+        res.status(200).json({message: 'Машина была успешно удалена'})
     } catch(e) {
-        res.status(500).json({message: 'Something went wrong'})
+        res.status(500).json({message: 'Что-то пошло не так'})
     }
 })
 
@@ -38,10 +37,10 @@ router.delete('/:id', async (req, res) => {
 router.post(
     '/create',
     [
-        check('brand', 'Bad brand name').exists(),
-        check('model', 'Bad model name').exists(),
-        check('win', 'Bad WIN number').exists(),
-        check('year', 'Bad year').exists(),
+        check('brand', 'Некорректное имя бренла').exists(),
+        check('model', 'Некорректное имя модели').exists(),
+        check('win', 'Некорректный WIN номер').exists(),
+        check('year', 'Некорректный год').exists(),
     ],
     async (req, res) => {
         try {
@@ -49,7 +48,7 @@ router.post(
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: 'Wrong data'
+                    message: 'Некорректный данные'
                 })
             }
 
@@ -57,16 +56,16 @@ router.post(
 
             const candidate = await Car.findOne({brand, model, year});
             if (candidate) {
-                return res.status(400).json({message: 'This car is already used'})
+                return res.status(400).json({message: 'Такая машина уже существует'})
             }
 
             await new Car({
                 brand, model, win, year, description
             }).save()
 
-            res.status(201).json({message: 'Car created'});
+            res.status(201).json({message: 'Машина успешно создана'});
         } catch (e) {
-            res.status(500).json({message: 'Something went wrong'})
+            res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
         }
     }
 )
