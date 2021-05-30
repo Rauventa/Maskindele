@@ -96,7 +96,7 @@ router.post(
       try {
         const {userId} = req.body;
 
-        const parts = await Parts.find({'owner': userId}).populate('car');
+        const parts = await Parts.find({'owner': userId}).populate('car').populate('customer');
         res.status(200).json(parts)
       } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})

@@ -16,7 +16,7 @@ const schema = new Schema({
         ref: 'User',
         required: true
     },
-    reservedBy: {
+    customer: {
         type: Schema.Types.ObjectId,
         ref: 'User',
     },
