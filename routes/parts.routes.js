@@ -1,6 +1,5 @@
 const {Router} = require('express');
 const Parts = require('../models/Parts');
-const Car = require('../models/Car');
 const {check, validationResult} = require('express-validator');
 const router = Router();
 
@@ -9,7 +8,7 @@ router.get('/:id', async (req, res) => {
         const part = await Parts.findById({_id: req.params.id}).populate('car');
         res.status(200).json(part)
     } catch(e) {
-        res.status(500).json({message: 'Something went wrong'})
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })
 
@@ -18,16 +17,20 @@ router.delete('/:id', async (req, res) => {
         await Parts.findByIdAndDelete({_id: req.params.id})
         res.status(200).json({message: 'Part was deleted successfully'})
     } catch (e) {
-        res.status(500).json({message: 'Something went wrong'})
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })
+
+//TODO - reserve query
 
 router.post(
     '/create',
     [
         check('name', 'Bad part name').exists(),
         check('vendor', 'Bad vendor code').exists(),
-        check('carId', 'Bad car id').exists(),
+        check('price', 'Bad part price').exists(),
+        check('owner', 'Bad owner id').exists(),
+        check('car', 'Bad car id').exists(),
     ],
     async (req, res) => {
         try {
@@ -39,24 +42,15 @@ router.post(
                 })
             }
 
-            const {name, vendor, carId} = req.body;
+            const {name, vendor, price, owner, car} = req.body;
 
-            const candidate = await Parts.findOne({vendor});
-            if (candidate) {
-                return res.status(400).json({message: 'This part is already used'})
-            }
-
-            const part = new Parts({name, vendor, car: carId})
+            const part = new Parts({name, vendor, status: 0, price, car, owner})
             await part.save();
-
-            const car = await Car.findById({_id: carId});
-            car.parts.push(part)
-            await car.save()
 
             return res.status(201).json({message: 'part was created'})
 
         } catch (e) {
-            res.status(500).json({message: 'Something went wrong'})
+            res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
         }
     }
 )

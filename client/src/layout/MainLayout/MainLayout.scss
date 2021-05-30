@@ -1,9 +1,14 @@
-.SignLayout {
+.layout {
   width: 100%;
   min-height: 100vh;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+
+  &__container {
+    min-height: calc(100vh - 150px);
+    padding: 40px;
+    background-color: #f9f9f9;
+  }
 }

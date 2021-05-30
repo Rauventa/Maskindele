@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import './Button.scss'
 
 interface ButtonProps {
@@ -6,6 +7,10 @@ interface ButtonProps {
   secondary?: boolean,
   light?: boolean,
   disabled?: boolean,
+
+  onClick?: () => void,
+
+  href?: any,
 
   children: React.ReactNode
 }
@@ -16,8 +21,18 @@ export const Button = ({
   light,
   disabled,
 
+  onClick,
+
+  href,
+
   children
 }: ButtonProps) => {
+
+  const returnClickHandler = () => {
+    if (onClick) {
+      onClick()
+    }
+  }
 
   let className = 'btn'
 
@@ -37,12 +52,24 @@ export const Button = ({
     className+= ' btn-disabled'
   }
 
-  return (
-    <button
-      className={className}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  )
+  if (href) {
+    return (
+      <NavLink
+        to={href}
+        className={className}
+      >
+        {children}
+      </NavLink>
+    )
+  } else {
+    return (
+      <button
+        className={className}
+        disabled={disabled}
+        onClick={returnClickHandler}
+      >
+        {children}
+      </button>
+    )
+  }
 }
