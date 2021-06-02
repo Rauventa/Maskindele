@@ -104,4 +104,18 @@ router.post(
     }
 )
 
+router.post(
+    '/customer',
+    async (req, res) => {
+      try {
+        const {userId} = req.body;
+
+        const parts = await Parts.find({'customer': userId}).populate('car').populate('owner');
+        res.status(200).json(parts)
+      } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+      }
+    }
+)
+
 module.exports = router;

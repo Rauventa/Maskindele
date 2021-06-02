@@ -19,7 +19,7 @@ export const Dashboard = () => {
     dispatch(getAllCars())
   }, []);
 
-  const {userId} = useContext(AuthContext)
+  const {role, userId} = useContext(AuthContext)
 
   const [parts, setParts] = useState<IParts[]>([])
 
@@ -60,31 +60,42 @@ export const Dashboard = () => {
         {$t('Дашборд')}
       </div>
 
-      <Card title={'Доступные детали'}>
-        <div>
-          <Select
-            options={cars}
-            onChange={(data: any) => handleUpdateSelect(data.value)}
-          />
+      {!role ?
+        <Card title={'Доступные детали'}>
+          <div>
+            <Select
+              options={cars}
+              onChange={(data: any) => handleUpdateSelect(data.value)}
+            />
+          </div>
+        </Card> : null
+      }
 
+      {!role ?
+        <div className={'Dashboard__items'}>
           {parts?.map((item: IParts, index: number) => {
             if (item.status === 0) {
               return (
-                <div key={index}>
-                  <div>
-                    {$t(`${item.name} за ${item.price}`)}
-                  </div>
+                <Card className={'fit-card'}>
+                  <div key={index} className={'Dashboard__parts'}>
+                    <div className={'Dashboard__parts_name'}>
+                      {$t(item.name)}
+                    </div>
 
-                  <Button primary onClick={() => handleReserveDetail(item._id)}>
-                    {$t('Забронировать деталь')}
-                  </Button>
-                </div>
+                    <div className={'Dashboard__parts_price'}>
+                      {$t(`${item.price} ₽`)}
+                    </div>
+
+                    <Button primary onClick={() => handleReserveDetail(item._id)}>
+                      {$t('Забронировать деталь')}
+                    </Button>
+                  </div>
+                </Card>
               )
             }
           })}
-        </div>
-      </Card>
-
+        </div> : null
+      }
     </div>
   )
 }

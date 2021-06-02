@@ -4,7 +4,7 @@ import {AuthContext} from "../../context/AuthContext";
 import {useDispatch, useSelector} from 'react-redux';
 import './Cabinet.scss'
 import {Button} from "../../components/Button/Button";
-import {getUserParts} from "../../store/actions/Parts/partsActions";
+import {getCustomerParts, getUserParts} from "../../store/actions/Parts/partsActions";
 import {BuyCabinetCars} from "./components/BuyCabinetCars";
 import {ApproveCabinetCars} from "./components/ApproveCabinetCars";
 import {SoldCabinetCars} from "./components/SoldCabinetCars";
@@ -16,11 +16,18 @@ export const Cabinet = () => {
 
   const {userId, name, role} = useContext(AuthContext)
 
+  console.log(userId)
+
   useEffect(() => {
-    dispatch(getUserParts(userId))
+    if (role) {
+      dispatch(getUserParts(userId))
+    } else {
+      dispatch(getCustomerParts(userId))
+    }
   }, []);
 
   const parts = useSelector((state: any) => state.partsReducer.parts);
+  const customerParts = useSelector((state: any) => state.partsReducer.customerParts);
 
   return (
     <div className={'Cabinet'}>
@@ -29,27 +36,42 @@ export const Cabinet = () => {
           {$t(`${name}, ${role ? 'Продавец' : 'Покупатель'}`)}
         </div>
 
-        <Button href={'/sold'} primary>
-          {$t('Выставить деталь на продажу')}
-        </Button>
+        {role ?
+          <Button href={'/sold'} primary>
+            {$t('Выставить деталь на продажу')}
+          </Button> : null
+        }
       </div>
 
-      <div className="Cabinet__container">
-        <BuyCabinetCars
-          parts={parts}
-          status={0}
-        />
+      {role ?
+        <div className="Cabinet__container">
+          <BuyCabinetCars
+            parts={parts}
+            status={0}
+          />
 
-        <ApproveCabinetCars
-          parts={parts}
-          status={1}
-        />
+          <ApproveCabinetCars
+            parts={parts}
+            status={1}
+          />
 
-        <SoldCabinetCars
-          parts={parts}
-          status={2}
-        />
-      </div>
+          <SoldCabinetCars
+            parts={parts}
+            status={2}
+          />
+        </div> :
+        <div className="Cabinet__container">
+          <ApproveCabinetCars
+            parts={customerParts}
+            status={1}
+          />
+
+          <SoldCabinetCars
+            parts={customerParts}
+            status={2}
+          />
+        </div>
+      }
     </div>
   )
 }

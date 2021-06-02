@@ -13,7 +13,7 @@ export const Card = ({
   className
 }: CardProps) => {
   return (
-    <div className={`card ${className}`}>
+    <div className={`card ${className ? className : ''}`}>
       {title ?
         <div className="card__title">
           {title}

@@ -1,0 +1,30 @@
+.Dashboard {
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+
+    div {
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
+    }
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  &__parts {
+    width: fit-content;
+
+    &_name {
+      margin-bottom: 10px;
+    }
+
+    &_price {
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
+}

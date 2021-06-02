@@ -10,5 +10,5 @@ export const AuthContext = createContext({
   logout: noopLogout,
   isAuth: false,
   name: null,
-  role: null
+  role: false
 })

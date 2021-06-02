@@ -11,7 +11,7 @@ import {AuthContext} from "../../../context/AuthContext";
 
 interface ApproveCabinetCarsProps {
   parts: IParts[],
-  status: number
+  status: number,
 }
 
 export const ApproveCabinetCars = ({
@@ -22,37 +22,91 @@ export const ApproveCabinetCars = ({
 
   const [data, setData] = useState<any>([]);
 
-  const {userId} = useContext(AuthContext)
+  const {userId, role} = useContext(AuthContext)
 
   useEffect(() => {
     const additionalData = [...parts];
-    const filtered = additionalData.filter((item: IParts) => item.status === status).map((item: IParts) => {
-      return {
-        id: item._id,
-        name: item.name,
-        car: `${item.car.brand} ${item.car.model}`,
-        price: `${item.price} ₽`,
-        customer: {
-          name: `${item.customer?.name} ${item.customer?.surname}`,
-          phone: item.customer?.phone
-        },
-      }
-    })
 
-    setData(filtered)
+    if (role) {
+      const filtered = additionalData.filter((item: IParts) => item.status === status).map((item: IParts) => {
+        return {
+          id: item._id,
+          name: item.name,
+          car: `${item.car.brand} ${item.car.model}`,
+          price: `${item.price} ₽`,
+          customer: {
+            name: `${item.customer?.name} ${item.customer?.surname}`,
+            phone: item.customer?.phone
+          },
+        }
+      })
+
+      setData(filtered)
+    } else {
+      const filtered = additionalData.filter((item: IParts) => item.status === status).map((item: IParts) => {
+        return {
+          id: item._id,
+          name: item.name,
+          car: `${item.car.brand} ${item.car.model}`,
+          price: `${item.price} ₽`,
+          owner: {
+            name: `${item.owner?.name} ${item.owner?.surname}`,
+            phone: item.owner?.phone
+          },
+        }
+      })
+
+      setData(filtered)
+    }
   }, [parts, status]);
 
   const soldHandler = async (id: string) => {
     try {
       await axios.put(`/api/parts/sold/${id}`)
-
       dispatch(getUserParts(userId))
     } catch (e) {
       console.log(e)
     }
   }
 
-  const tableColumns: any = [
+  const customerColumns: any = [
+    {
+      Header: 'Название детали',
+      accessor: 'name',
+    },
+    {
+      Header: 'Автомобиль',
+      accessor: 'car',
+    },
+    {
+      Header: 'Цена',
+      accessor: 'price',
+    },
+    {
+      id: 'owner',
+      Header: 'Продавец',
+      accessor: 'owner',
+      Cell: ({value}: any) => (
+        <div>
+          <div>
+            {$t(value.name)}
+          </div>
+          <a href={`tel:${value.phone}`}>{value.phone}</a>
+        </div>
+      )
+    },
+    {
+      Header: 'Действия',
+      accessor: 'actions',
+      Cell: ({row}: any) => (
+        <Button primary>
+          {$t('Отменить подтверждение')}
+        </Button>
+      )
+    },
+  ]
+
+  const sellerColumns: any = [
     {
       Header: 'Название детали',
       accessor: 'name',
@@ -95,7 +149,7 @@ export const ApproveCabinetCars = ({
       className={'table-card'}
     >
       <Table
-        tableColumns={tableColumns}
+        tableColumns={role ? sellerColumns : customerColumns}
         tableData={data}
       />
     </Card>
